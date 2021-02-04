@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 //learning how to use git hub tbh
+//Messing around with github commands. ignore
 int checkResponse(char* response);
 int generateGuess(int respNum);
 
