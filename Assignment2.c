@@ -2,51 +2,65 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-//learning how to use git hub tbh
-//Messing around with github commands. ignore
-int checkResponse(char* response);
-int generateGuess(int respNum);
+
+void generateGuess(int, int, int, int);
+int askTheCat(int);
 
 int main(){
-	//input
-	char response[1000];
-	int guess, max;
-	int i, answer;
-	//give a max number
+	char response[50];
+	int max, guess, responseInt;
+	//scan for max
 	scanf("%d", &max);
-
-	//initialize guess
-	guess = (max/2);
-
-	for (i = 0; i < (max/2); i++){
-		printf("%d\n", guess);
-		scanf(" %[^\n]s", response);
-		answer = checkResponse(response);
-		if (answer == 1){
-			return 0;
-		}
-		if (answer == 2){
-			guess = (max/4);
-		}
-		if (answer == 3){
-			guess = guess+1;
-		}
-		if (answer == 4){
-			guess = guess-1;
-		}
-		if (answer == 5){
-			printf("Invalid Entry\n");
-		}
-
-
-
-	}
-
-
+	printf("%d\n", max/2);
+	responseInt = askTheCat(max/2);
+	generateGuess(1, max, responseInt, max/2);
 	return 0;
 }
 
-int checkResponse(char * response){
+void generateGuess(int low, int high, int response, int guess){
+	int answer;
+
+	if(response == 1){
+		return;
+	}
+	if(response == 2){
+		guess = ((high/2)+1);
+		printf("%d\n", guess);
+		answer = askTheCat(guess);
+		generateGuess(((high/2)+1), high, answer, guess);
+
+	}
+	if(response == 3){
+		low = (((high-low)/2)+low);
+		high = high;
+		guess = high;
+		printf("%d\n", guess);
+		answer = askTheCat(guess);
+		if(answer == 3){
+			guess = (((high-low)/2)+low);
+			printf("%d", (((high-low)/2)+low));
+			generateGuess(low, high, answer, guess);
+
+		}
+		generateGuess(low, high, answer, guess);
+
+	}
+	if(response == 4){
+		//generateGuess(low, ((high/2)+1));
+	}
+
+	
+}
+//Takes in a computer generated guess
+//returns a number based on user input string
+// "Yes!!!" 	 = 1
+// "No." 		 = 2
+// "No. Warmer." = 3
+// "No. Colder." = 4
+// any invalid entry returns 5
+int askTheCat(int guess){
+	char response[50];
+	scanf(" %[^\n]s", response);
 	if (strcmp(response, "y") == 0){
 		return 1;
 	}
@@ -61,4 +75,3 @@ int checkResponse(char * response){
 	}
 	else return 5;
 }
-
