@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-void generateGuess(int, int, int, int);
+void generateGuess(int, int, int);
 int askTheCat(int);
 
 int main(){
@@ -13,12 +13,13 @@ int main(){
 	scanf("%d", &max);
 	printf("%d\n", max/2);
 	responseInt = askTheCat(max/2);
-	generateGuess(1, max, responseInt, max/2);
+	generateGuess(1, max, responseInt);
 	return 0;
 }
 
-void generateGuess(int low, int high, int response, int guess){
+void generateGuess(int low, int high, int response){
 	int answer;
+	int guess;
 
 	if(response == 1){
 		return;
@@ -27,26 +28,25 @@ void generateGuess(int low, int high, int response, int guess){
 		guess = ((high/2)+1);
 		printf("%d\n", guess);
 		answer = askTheCat(guess);
-		generateGuess(((high/2)+1), high, answer, guess);
+		generateGuess(low, high, answer);
 
 	}
 	if(response == 3){
 		low = (((high-low)/2)+low);
 		high = high;
-		guess = high;
+		guess = (((high-low)/2)+low);
 		printf("%d\n", guess);
 		answer = askTheCat(guess);
-		if(answer == 3){
-			guess = (((high-low)/2)+low);
-			printf("%d", (((high-low)/2)+low));
-			generateGuess(low, high, answer, guess);
-
-		}
-		generateGuess(low, high, answer, guess);
+		generateGuess(low, high, answer);
 
 	}
 	if(response == 4){
-		//generateGuess(low, ((high/2)+1));
+		low = low;
+		high = (((high-low)/2)+low);
+		guess = (((high-low)/2)+low);
+		printf("%d\n", guess);
+		answer = askTheCat(guess);
+		generateGuess(low, high, answer);
 	}
 
 	
