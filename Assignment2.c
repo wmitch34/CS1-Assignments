@@ -15,45 +15,65 @@ int askTheCat();
 int mid(int, int);
 
 int main(){
-	int guess, answer;
-	int low = 1;
-	int high;
-	
+	int guess, answer, previousGuess;
+	int high, max, i = 0, low = 1, maxGuess;
 
 	scanf("%d", &high);
-	printf("%d\n",mid(low, high));
-	answer = askTheCat();
-	printf("%d\n", 1 +mid(low, high));
-	answer = askTheCat();
 
-	while (answer != 1){
+	max = high;
+	maxGuess = (1 + (2 * (ceil((log10(max))/(log10(2))))));
+
+	printf("maximum number of guesses: %d\n", maxGuess);
+	printf("%d\n",mid(low, high));
+	i++;
+	answer = askTheCat();
+	printf("%d\n", 1 + mid(low, high));
+	i++;
+	answer = askTheCat();
+	if (answer == 1){
+		return 0;
+	}
+	
+	while (i < maxGuess){	
+		if (answer == 1){
+			return 0;
+		}
 		if(answer == 3){
 			low = (mid(low, high));
 			high = high;
-			printf ("range is %d - %d\n", low, high);
 			guess = mid(low, high);
 			printf("%d\n", guess);
+			i++;
 			answer = askTheCat();
-			if (answer != 1){
+			if (answer != 1 && i < maxGuess){
 				guess = guess + 1;
 				printf("%d\n", guess);
+				i++;
 				answer = askTheCat();
 			}
 		}
 		if(answer == 4){
 			low = low;
 			high = mid(low, high);
-			printf ("range is %d - %d\n", low, high);
 			guess = mid(low, high);
 			printf("%d\n", guess);
+			i++;
 			answer = askTheCat();
-			if (answer != 1){
+			if (answer != 1 && i < maxGuess){
 				guess = guess + 1;
 				printf("%d\n", guess);
+				i++;
 				answer = askTheCat();
 			}
 		}
+		if(answer == 5){
+			guess = mid(previousGuess, guess);
+			printf("%d\n", guess);
+			answer = askTheCat();
+		}
+		printf("number of guesses attempted: %d\n", i);
 	}
+	printf("Game Over!\n");
 	return 0;
 }
 
@@ -77,5 +97,8 @@ int askTheCat(){
 	if (strcmp(response, "c") == 0){
 		return 4;
 	}
-	else return 5;
+	if (strcmp(response, "No change") == 0){
+		return 5;
+	}
+	else return 6;
 }
