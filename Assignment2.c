@@ -37,9 +37,18 @@ int main(){
 			high = high;
 			previousGuess = guess;
 			guess = mid(low, high);
-			printf("%d\n", guess);
-			fflush(stdout);
-			answer = askTheCat();
+			//this is a case unique to the 
+			//'warmer' response. if/else statement
+			//prevents program from printing the
+			//same guess twice in a row.
+			if(guess == previousGuess){
+				guess = guess + 1;
+			}
+			else{
+				printf("%d\n", guess);
+				fflush(stdout);
+				answer = askTheCat();
+			}
 			if (answer != 1){
 				//Guess mid+1 to establish
 				//new upper and lower bound
@@ -71,10 +80,9 @@ int main(){
 			}
 		}
 		else if(answer == 5){
-			//This case should never be initiated, but
-			//if previousGuess == guess, print the 
-			//value in the middle of them.
-			//this value should always be the target
+			//print the value between previousGuess 
+			//and guess. This value should
+			//always be the target
 			guess = mid(previousGuess, guess);
 			printf("%d\n", guess);
 			fflush(stdout);
