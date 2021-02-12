@@ -8,7 +8,7 @@ int main(){
 	int n;
 	printf("Enter a number: ");
 	scanf("%d", &n);
-	printf("%d! is equal to %li\n", n, recursiveFact(n));
+	printf("%d! is equal to %d\n", n, recursiveFact(n));
 	return 0;
 }
 
