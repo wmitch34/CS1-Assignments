@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 #define BUFFER 100000
-
+//some prototypes
 void generateHandle(char *);
 void destroyArray(char**, int);
 
 int main(){
     char ** nameList;
     int count;
-    //get how many names you youre processing
+    //get how many names to process
     scanf("%i", &count);
-    //allocate memory for each name
+    //allocate memory for name list
     nameList = (char**)calloc(count, sizeof(char*));
     //for loop for reading in names
     for(int i = 0; i < count; i++){
@@ -33,7 +33,7 @@ int main(){
 
 void generateHandle(char * name){
     char * word;
-    //chop off each word and process 
+    //chop off each word and process
     //them individually
     word = strtok(name, " ");
     //continue chopping untill the end of the string
