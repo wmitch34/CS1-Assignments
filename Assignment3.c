@@ -4,45 +4,44 @@
 #define BUFFER 21
 
 void destroyArray(char ** arrList, int count);
-int permutation(char **);
+int permutations(char** arrList, char** retList, int retCount, int len);
 
 int main(){
 	int count;
 	char ** arrList;
-	char word;
-
+	char ** retList;
 
 	scanf("%d", &count);
-
+	int len = count - 1;
 	arrList = (char**) calloc(count, sizeof(char *));
+	retList = (char**) calloc(count, sizeof(char *));
+
 	for(int i = 0; i < count; i++){
-		arrList[i] = (char*) malloc(BUFFER * sizeof(char));
+		arrList[i] = (char*) malloc(BUFFER+1);
+		retList[i] = (char*) malloc(BUFFER+1);
 		scanf("%s", arrList[i]);
 	}
-	for(int i = 0; i < count; i++){
-		printf("%s ", arrList[i]);
-	}
-	printf("\n");
-
+    //if (permutations(arrList, retList, 0, len) == 1){
+        for(int i = 0; i < count; i++){
+            printf("%s", retList[i]);
+        }
+    //}
 	destroyArray(arrList, count);
+	destroyArray(retList, count);
 	return 0;
 }
 
-int permutations(char** arrList){
-	if(   ){
-		return 1;
-	}
-	else{
-		return ;
-	}
+int permutations(char** arrList, char** retList, int retCount, int len){
+    if (retList[retCount][strlen(retList[retCount])-1] == arrList[len][0]){
+        retList[retCount + 1] = arrList[len];
+        permutations(arrList, retList, retCount + 1, len - 1);
+    }
+    else permutations(arrList, retList, retCount, len - 1);
 }
 
-
 void destroyArray(char ** arrList, int count){
-    //free each individual element of the array
     for(int i = 0; i < count; i++){
         free(arrList[i]);
     }
-    //free the whole array
     free(arrList);
 }
