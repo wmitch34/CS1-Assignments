@@ -3,44 +3,65 @@
 #include <string.h>
 #define BUFFER 21
 
-void destroyArray(char ** arrList, int count);
-int permutations(char** arrList, char** retList, int retCount, int len);
+void permute(int max, int index, char ** array);
+void destroyArray(char ** arrList, int max);
+int check(char ** array, int max);
 
 int main(){
-	int count;
+    int max;
 	char ** arrList;
-	char ** retList;
 
-	scanf("%d", &count);
-	int len = count - 1;
-	arrList = (char**) calloc(count, sizeof(char *));
-	retList = (char**) calloc(count, sizeof(char *));
+	scanf("%d", &max);
+	arrList = (char**) calloc(max, sizeof(char *));
 
-	for(int i = 0; i < count; i++){
+	for(int i = 0; i < max; i++){
 		arrList[i] = (char*) malloc(BUFFER+1);
-		retList[i] = (char*) malloc(BUFFER+1);
 		scanf("%s", arrList[i]);
 	}
-    //if (permutations(arrList, retList, 0, len) == 1){
-        for(int i = 0; i < count; i++){
-            printf("%s", retList[i]);
+    permute(max, 0, arrList);
+    destroyArray(arrList, max);
+    return 0;
+}
+
+void permute(int max, int index, char ** array){
+    if (index == max){
+        if(check(array, max) == 1){
+            for(int i = 0; i < max; i ++){
+                printf("%s ", array[i]);
+            }
+            printf("\n");
+            return;
         }
-    //}
-	destroyArray(arrList, count);
-	destroyArray(retList, count);
-	return 0;
-}
-
-int permutations(char** arrList, char** retList, int retCount, int len){
-    if (retList[retCount][strlen(retList[retCount])-1] == arrList[len][0]){
-        retList[retCount + 1] = arrList[len];
-        permutations(arrList, retList, retCount + 1, len - 1);
     }
-    else permutations(arrList, retList, retCount, len - 1);
+    else{
+        for (int i = index; i < max; i++){
+            char tmpVar[BUFFER];
+            strcpy(tmpVar, array[index]);
+            strcpy(array[index], array[i]);
+            strcpy(array[i], tmpVar);
+
+            permute(max, index + 1, array);
+
+            strcpy(tmpVar, array[index]);
+            strcpy(array[index], array[i]);
+            strcpy(array[i], tmpVar);
+        }
+        return;
+    }
 }
 
-void destroyArray(char ** arrList, int count){
-    for(int i = 0; i < count; i++){
+int check(char ** array, int max){
+    for(int i = 0; i < max - 1; i++){
+        if (array[i][strlen(array[i])-1] != array[i + 1][0]){
+            return 0;
+        }
+    }
+    return 1;
+
+}
+
+void destroyArray(char ** arrList, int max){
+    for(int i = 0; i < max; i++){
         free(arrList[i]);
     }
     free(arrList);
