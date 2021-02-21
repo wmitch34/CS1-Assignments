@@ -3,7 +3,7 @@
 #include <string.h>
 #define BUFFER 21
 
-void permute(int max, int index, char ** array);
+int permute(int max, int index, char ** array);
 void destroyArray(char ** arrList, int max);
 int check(char ** array, int max);
 
@@ -23,15 +23,16 @@ int main(){
     return 0;
 }
 
-void permute(int max, int index, char ** array){
+int permute(int max, int index, char ** array){
     if (index == max){
         if(check(array, max) == 1){
             for(int i = 0; i < max; i ++){
                 printf("%s ", array[i]);
             }
             printf("\n");
-            return;
+            return 1;
         }
+        return 0;
     }
     else{
         for (int i = index; i < max; i++){
@@ -40,13 +41,14 @@ void permute(int max, int index, char ** array){
             strcpy(array[index], array[i]);
             strcpy(array[i], tmpVar);
 
-            permute(max, index + 1, array);
-
+            if (permute(max, index + 1, array)){
+                return 1;
+            }
             strcpy(tmpVar, array[index]);
             strcpy(array[index], array[i]);
             strcpy(array[i], tmpVar);
         }
-        return;
+        return 0;
     }
 }
 
@@ -57,7 +59,6 @@ int check(char ** array, int max){
         }
     }
     return 1;
-
 }
 
 void destroyArray(char ** arrList, int max){
