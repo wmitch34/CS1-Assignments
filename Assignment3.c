@@ -22,7 +22,7 @@ int main(){
     // 'i' of the array of words, then scan the characters 
     //into that array from the user
     for(int i = 0; i < max; i++){
-        arrList[i] = (char*) malloc(BUFFER+1);
+        arrList[i] = (char*) malloc(BUFFER + 1);
         scanf("%s", arrList[i]);
     }
     //pass the number of words, the current the currect index
