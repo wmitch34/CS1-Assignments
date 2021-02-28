@@ -9,9 +9,44 @@ typedef struct customer{
     char name[BUFFER+1];
 }customer;
 
-long long int convertToUnits(int tokens, int bills, int tokenValue, int billValue);
-void mergeArrays(int * customerList, int leftBound, int rightBound, int mid);
-void mergeSort(int * CustomerList, int leftBound, int rightBount);
+long long int convertToUnits(int tokens, int bills, int tokenValue, int billValue){
+    long int units;
+    units = (tokens * billValue) + (bills * tokenValue);
+    return units;
+}
+void merge(struct customer * customerList, int len){ 
+    if (len <= 1) {
+        return;
+    }    
+    int mid = len / 2;    
+    merge(customerList, mid);    
+    merge(customerList + mid, len-mid);
+    
+    struct customer * temp = (customer*)calloc(len, sizeof(customer));
+    int fptr = 0;
+    int bptr = mid;
+    for (int i = 0; i < len; i++) {
+        if (fptr < mid && bptr < len) {
+            if (customerList[fptr].units > customerList[bptr].units){// if front is greater than back
+                temp[i] = customerList[fptr];
+                fptr++;
+            } else { // back has larger (or equal) element
+                temp[i] = customerList[bptr];
+                bptr++;
+            }        
+        } else if (fptr < mid) { // front is non-empty, back is not
+            temp[i] = customerList[fptr];
+            fptr++;
+        } else { // back is non-empty, front is not
+            temp[i] = customerList[bptr];
+            bptr++;
+        }
+    }    
+    for (int i = 0; i < len; i++)
+        customerList[i] = temp[i];    
+
+    free(temp);
+}
 
 int main(){
     customer * customerList;
@@ -34,12 +69,12 @@ int main(){
         customerList[i].units = convertToUnits(customerList[i].tokens, customerList[i].bills, tokenValue, billValue);
     }
 
-    //callmerge sort function to sort customers in customer array from highest to lowest
+    merge(customerList, count);
 
     for(int i = 0; i < count; i++){
         printf("%s ", customerList[i].name);
-        printf("%d ", customerList[i].tokens);
-        printf("%d ", customerList[i].bills);
+        //printf("%d ", customerList[i].tokens);
+        //printf("%d ", customerList[i].bills);
         printf("%d \n", customerList[i].units);
     }
 
@@ -48,14 +83,3 @@ int main(){
     return 0;
 }
 
-long long int convertToUnits(int tokens, int bills, int tokenValue, int billValue){
-    long int units;
-    units = (tokens * billValue) + (bills * tokenValue);
-    return units;
-}
-void mergeArrays(int * customerList, int leftBound, int rightBound, int mid){
-
-}
-void mergeSort(int * CustomerList, int leftBound, int rightBount){
-
-}
