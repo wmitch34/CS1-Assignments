@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #define BUFFER 20
 //Will Mitchell Mar 1, 2021
 //program adds customer name and payment info to array 
@@ -9,7 +11,7 @@
 typedef struct customer{
     int bills;
     int tokens;
-    int units;
+    long long int units;
     char name[BUFFER+1];
 }customer;
 //function converts customer's number of bills/tokens into a standardized unit
@@ -19,6 +21,8 @@ long long int convertToUnits(int tokens, int bills, int tokenValue, int billValu
     units = (tokens * billValue) + (bills * tokenValue);
     return units;
 }
+//merge sort that sorts struct customer arr from greatest to least
+//based on the  int value in the units element
 void merge(struct customer * customerList, int len){ 
     //base case for merge sort: when array is 1 unit long
     if (len <= 1) {
@@ -44,7 +48,7 @@ void merge(struct customer * customerList, int len){
                 temp[i] = customerList[bptr];
                 bptr++;
             }
-        //if either arr array is invalid choose value from valid array        
+        //if either arr array is invalid populate temp with value from valid array        
         } else if (fptr < mid) {
             temp[i] = customerList[fptr];
             fptr++;
@@ -65,32 +69,42 @@ int main(){
     customer * customerList;
     int bills, tokens, count, tokenValue, billValue;
     char name[BUFFER+1];
+    srand(time(NULL));
 
-    scanf("%d", &count);
+    //scanf("%d", &count);
+    count = 1000;
     //initialize customer ptr arr based on user input
     customerList = (customer*) calloc(count, sizeof(customer));
-
+    //populate customer structs one at a time excliding the units element
     for(int i = 0; i < count; i++){
-        scanf("%s", customerList[i].name);
-        scanf("%d", &customerList[i].tokens);
-        scanf("%d", &customerList[i].bills);
+        strcpy(customerList[i].name, "Will");
+        int j = rand() % 10;
+        int k = rand() % 10;
+        customerList[i].tokens = j;
+        customerList[i].bills = k;
+        //scanf("%s", customerList[i].name);
+        //scanf("%d", &customerList[i].tokens);
+        //scanf("%d", &customerList[i].bills);
     }
-
-    scanf("%d", &tokenValue);
-    scanf("%d", &billValue);
-
+    //scan user input token/bill ration
+    tokenValue = 100;
+    billValue = 1;
+    //scanf("%d", &tokenValue);
+    //scanf("%d", &billValue);
+    //now that we have the values we can populate units element using the function
     for(int i = 0; i < count; i++){
         customerList[i].units = convertToUnits(customerList[i].tokens, customerList[i].bills, tokenValue, billValue);
     }
-
+    //call merge sort using the number of customers as initial length
     merge(customerList, count);
-
+    //print cust names of the now sorted arr
     for(int i = 0; i < count; i++){
         printf("%s ", customerList[i].name);
-        //printf("%d ", customerList[i].tokens);
-        //printf("%d ", customerList[i].bills);
-        //printf("%d \n", customerList[i].units);
+        printf("%d pennys  ", customerList[i].tokens);
+        printf("%d dollars  ", customerList[i].bills);
+        printf("%lld cents\n", customerList[i].units);
     }
+    printf("%d", count);
 
     free(customerList);
 
