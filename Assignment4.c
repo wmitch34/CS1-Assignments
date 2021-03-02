@@ -1,49 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define BUFFER 20
-
+//Will Mitchell Mar 1, 2021
+//program adds customer name and payment info to array 
+//then sorts and prints customers by amount paid from greatest to least
+//the merge sort is heavily inspired by Dr. Meades version, but
+//adapted to run my data structure
 typedef struct customer{
     int bills;
     int tokens;
     int units;
     char name[BUFFER+1];
 }customer;
-
+//function converts customer's number of bills/tokens into a standardized unit
+//based on user input vale ratio of tokens to bills
 long long int convertToUnits(int tokens, int bills, int tokenValue, int billValue){
-    long int units;
+    long long int units;
     units = (tokens * billValue) + (bills * tokenValue);
     return units;
 }
 void merge(struct customer * customerList, int len){ 
+    //base case for merge sort: when array is 1 unit long
     if (len <= 1) {
         return;
     }    
-    int mid = len / 2;    
+    int mid = len / 2;
+    //recursive call x2. Array is split int two sub arrays
+    //and both are passed recursively until arr size is one    
     merge(customerList, mid);    
     merge(customerList + mid, len-mid);
-    
+    //alloc temp array for storing sorted customers
     struct customer * temp = (customer*)calloc(len, sizeof(customer));
     int fptr = 0;
     int bptr = mid;
     for (int i = 0; i < len; i++) {
+        //if front array and back array are valid
         if (fptr < mid && bptr < len) {
-            if (customerList[fptr].units > customerList[bptr].units){// if front is greater than back
+            //pick smaller value
+            if (customerList[fptr].units > customerList[bptr].units){
                 temp[i] = customerList[fptr];
                 fptr++;
-            } else { // back has larger (or equal) element
+            } else {
                 temp[i] = customerList[bptr];
                 bptr++;
-            }        
-        } else if (fptr < mid) { // front is non-empty, back is not
+            }
+        //if either arr array is invalid choose value from valid array        
+        } else if (fptr < mid) {
             temp[i] = customerList[fptr];
             fptr++;
-        } else { // back is non-empty, front is not
+        } else {
             temp[i] = customerList[bptr];
             bptr++;
         }
-    }    
-    for (int i = 0; i < len; i++)
+    }
+    //copy sorted temp arr back into initial custustomer arr    
+    for (int i = 0; i < len; i++){
         customerList[i] = temp[i];    
+    }
 
     free(temp);
 }
@@ -54,6 +67,7 @@ int main(){
     char name[BUFFER+1];
 
     scanf("%d", &count);
+    //initialize customer ptr arr based on user input
     customerList = (customer*) calloc(count, sizeof(customer));
 
     for(int i = 0; i < count; i++){
@@ -75,7 +89,7 @@ int main(){
         printf("%s ", customerList[i].name);
         //printf("%d ", customerList[i].tokens);
         //printf("%d ", customerList[i].bills);
-        printf("%d \n", customerList[i].units);
+        //printf("%d \n", customerList[i].units);
     }
 
     free(customerList);
