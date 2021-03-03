@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #define BUFFER 20
 //Will Mitchell Mar 1, 2021
-//program adds customer name and payment info to array 
+//program adds customer name and payment info to array
 //then sorts and prints customers by amount paid from greatest to least
 //the merge sort is heavily inspired by Dr. Meades version, but
 //adapted to run my data structure
@@ -23,15 +21,15 @@ long long int convertToUnits(int tokens, int bills, int tokenValue, int billValu
 }
 //merge sort that sorts struct customer arr from greatest to least
 //based on the  int value in the units element
-void merge(struct customer * customerList, int len){ 
+void merge(struct customer * customerList, int len){
     //base case for merge sort: when array is 1 unit long
     if (len <= 1) {
         return;
-    }    
+    }
     int mid = len / 2;
     //recursive call x2. Array is split int two sub arrays
-    //and both are passed recursively until arr size is one    
-    merge(customerList, mid);    
+    //and both are passed recursively until arr size is one
+    merge(customerList, mid);
     merge(customerList + mid, len-mid);
     //alloc temp array for storing sorted customers
     struct customer * temp = (customer*)calloc(len, sizeof(customer));
@@ -48,7 +46,7 @@ void merge(struct customer * customerList, int len){
                 temp[i] = customerList[bptr];
                 bptr++;
             }
-        //if either arr array is invalid populate temp with value from valid array        
+        //if either arr array is invalid populate temp with value from valid array
         } else if (fptr < mid) {
             temp[i] = customerList[fptr];
             fptr++;
@@ -57,9 +55,9 @@ void merge(struct customer * customerList, int len){
             bptr++;
         }
     }
-    //copy sorted temp arr back into initial custustomer arr    
+    //copy sorted temp arr back into initial custustomer arr
     for (int i = 0; i < len; i++){
-        customerList[i] = temp[i];    
+        customerList[i] = temp[i];
     }
 
     free(temp);
@@ -70,27 +68,19 @@ int main(){
     int bills, tokens, count, tokenValue, billValue;
     char name[BUFFER+1];
     srand(time(NULL));
-
-    //scanf("%d", &count);
-    count = 1000;
+    //get number of customers
+    scanf("%d", &count);
     //initialize customer ptr arr based on user input
     customerList = (customer*) calloc(count, sizeof(customer));
-    //populate customer structs one at a time excliding the units element
+    //populate customer structs one at a time excluding the units element
     for(int i = 0; i < count; i++){
-        strcpy(customerList[i].name, "Will");
-        int j = rand() % 10;
-        int k = rand() % 10;
-        customerList[i].tokens = j;
-        customerList[i].bills = k;
-        //scanf("%s", customerList[i].name);
-        //scanf("%d", &customerList[i].tokens);
-        //scanf("%d", &customerList[i].bills);
+        scanf("%s", customerList[i].name);
+        scanf("%d", &customerList[i].tokens);
+        scanf("%d", &customerList[i].bills);
     }
     //scan user input token/bill ration
-    tokenValue = 100;
-    billValue = 1;
-    //scanf("%d", &tokenValue);
-    //scanf("%d", &billValue);
+    scanf("%d", &tokenValue);
+    scanf("%d", &billValue);
     //now that we have the values we can populate units element using the function
     for(int i = 0; i < count; i++){
         customerList[i].units = convertToUnits(customerList[i].tokens, customerList[i].bills, tokenValue, billValue);
@@ -100,8 +90,6 @@ int main(){
     //print cust names of the now sorted arr
     for(int i = 0; i < count; i++){
         printf("%s ", customerList[i].name);
-        printf("%d pennys  ", customerList[i].tokens);
-        printf("%d dollars  ", customerList[i].bills);
         printf("%lld cents\n", customerList[i].units);
     }
     printf("%d", count);
@@ -110,4 +98,3 @@ int main(){
 
     return 0;
 }
-
