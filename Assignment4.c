@@ -3,17 +3,17 @@
 #define BUFFER 20
 //Will Mitchell Mar 1, 2021
 //program adds customer name and payment info to array
-//then sorts and prints customers by amount paid from greatest to least
-//the merge sort is heavily inspired by Dr. Meades version, but
-//adapted to run my data structure
+//then sorts and prints customer names by amount paid from greatest to least.
+//The merge sort is heavily inspired by Dr. Meades version, but
+//adapted to run my data structure.
 typedef struct customer{
     int bills;
     int tokens;
     long long int units;
     char name[BUFFER+1];
 }customer;
-//function converts customer's number of bills/tokens into a standardized unit
-//based on user input vale ratio of tokens to bills
+//Converts customer's number of bills/tokens into a standardized unit
+//based on user input value ratio of tokens to bills
 long long int convertToUnits(int tokens, int bills, int tokenValue, int billValue){
     long long int units;
     units = (tokens * billValue) + (bills * tokenValue);
@@ -67,7 +67,6 @@ int main(){
     customer * customerList;
     int bills, tokens, count, tokenValue, billValue;
     char name[BUFFER+1];
-    srand(time(NULL));
     //get number of customers
     scanf("%d", &count);
     //initialize customer ptr arr based on user input
@@ -81,7 +80,7 @@ int main(){
     //scan user input token/bill ration
     scanf("%d", &tokenValue);
     scanf("%d", &billValue);
-    //now that we have the values we can populate units element using the function
+    //can populate units element using the function
     for(int i = 0; i < count; i++){
         customerList[i].units = convertToUnits(customerList[i].tokens, customerList[i].bills, tokenValue, billValue);
     }
@@ -89,10 +88,8 @@ int main(){
     merge(customerList, count);
     //print cust names of the now sorted arr
     for(int i = 0; i < count; i++){
-        printf("%s ", customerList[i].name);
-        printf("%lld cents\n", customerList[i].units);
+        printf("%s\n", customerList[i].name);
     }
-    printf("%d", count);
 
     free(customerList);
 
