@@ -1,43 +1,109 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define BUFFER 20
+#include <string.h>
+#define BUFFER_LEN 20
 
 typedef struct gamer{
 	int tokens;
-	char name[BUFFER + 1];
-	struct gamer * pointer;
+	char name[BUFFER_LEN + 1];
+	struct gamer * next;
 }gamer;
 
-gamer * addGamer(){
-	gamer * newGamer;
-	newGamer = calloc(1, sizeof(gamer));
+gamer * push(gamer * head, gamer * newGamer){
+	if(head == NULL){
+		return newGamer;
+	}
+	else if (newGamer->tokens >= head->tokens){
+		newGamer->next = head;
+	}
+	else{
+		newGamer->tokens = head->tokens;
+		strcpy(newGamer->name, head->name);
+		newGamer->next = head;
+	}	
 	return newGamer;
 }
 
-gamer * removeGamer(){
+gamer * pop(gamer * head){
+	if (head == NULL){
+		return NULL;
+	}
+	else{
+		gamer * newHead;
+		newHead = head->next;
+		free(head);
+		return newHead;
+	}
+}
 
+void peek(gamer * head){
+	if (head == NULL){
+		return;
+	}
+	else{
+		printf("%s\n", head->name);
+	}
+	
+}
+
+void destroyStack(gamer * head){
+	if(head == NULL){
+		return;
+	}
+	else{
+		destroyStack(head->next);
+		free(head);
+	}
+}
+
+gamer * createNode(int tokens, char * name){
+	struct gamer * newGamer;
+	newGamer = (gamer*) malloc(sizeof(gamer));
+	newGamer->tokens = tokens;
+	strcpy(newGamer->name, name);
+	newGamer->next = NULL;
+	return newGamer;
 }
 
 int main(){
 	struct gamer * head = NULL;
-	int userInput;
+	struct gamer * newGamer;
+	int userInput, tokens;
+	char name[BUFFER_LEN + 1];
+
 	do{
+		/*printf("0 to exit\n");
+		printf("1 to add player\n");
+		printf("2 to remove player\n");
+		printf("3 to display mvp\n");*/
 		scanf("%d", &userInput);
 		switch(userInput){
 			case 0:
 			break;
 
 			case 1:
-			//input gamer
-			//add gamer
+			//printf("Enter Number of tokens and name on one line\n");
+			scanf("%d", &tokens);
+			scanf("%s", name);
+			newGamer = createNode(tokens, name);
+			head = push(head, newGamer);
 			break;
 
 			case 2:
-			//removeGamer
+			head = pop(head);
+			break;
+
+			case 3:
+			peek(head);
+			break;
+
+			default:
 			break;
 
 		}
-	}while(userInput != 0);
+	}while(userInput != 0 );
+
+	destroyStack(head);
 	
 	return 0;
 }
