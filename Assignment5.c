@@ -68,14 +68,10 @@ gamer * createNode(int tokens, char * name){
 int main(){
 	struct gamer * head = NULL;
 	struct gamer * newGamer;
-	int userInput, tokens;
+	int userInput = -1, tokens;
 	char name[BUFFER_LEN + 1];
 
-	do{
-		/*printf("0 to exit\n");
-		printf("1 to add player\n");
-		printf("2 to remove player\n");
-		printf("3 to display mvp\n");*/
+	while(userInput != 0 ){
 		scanf("%d", &userInput);
 		switch(userInput){
 			case 0:
@@ -101,7 +97,7 @@ int main(){
 			break;
 
 		}
-	}while(userInput != 0 );
+	}
 
 	destroyStack(head);
 	
