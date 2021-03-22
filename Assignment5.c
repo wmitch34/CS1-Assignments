@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define BUFFER_LEN 20
-
+//gamer moment inbound
 typedef struct gamer{
 	int tokens;
 	char name[BUFFER_LEN + 1];
