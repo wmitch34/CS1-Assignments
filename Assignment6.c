@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+//this setup is Dr. Meades code used for the purpose
+//of outlining a bst that will serve the purpose of my program
 typedef struct Node Node;
 
 struct Node{
