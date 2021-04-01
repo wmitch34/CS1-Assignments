@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//this setup is Dr. Meades code used for the purpose
-//of outlining a bst that will serve the purpose of my program
+
 typedef struct Node Node;
 
 struct Node{
@@ -10,20 +9,12 @@ struct Node{
     Node *l, * r;
 };
 
-int sumOfLeaves(Node * root);
-Node * remove2(Node * root, int value);
-Node * insert(Node * root, int value);
-void postOrder(Node * root);
-Node * createNode(int value);
-int  contains(Node * root, int value);
-
-
-int main(){
-	int numPlayers;
-
-	scanf("%i", &numPlayers);
-	printf("%i\n", numPlayers);
-	return 0;
+Node * createNode(int value){
+    Node * ret = calloc(1, sizeof(Node));
+    ret->value = value;
+    ret->r = ret->l = NULL;
+    printf("createNode success.\n");    
+    return ret;
 }
 
 int sumOfLeaves(Node * root){
@@ -90,8 +81,9 @@ Node * remove2(Node * root, int value){
 
 // Return the root of the tree
 Node * insert(Node * root, int value){
-    if (root == NULL)
+    if (root == NULL){
         return createNode(value);
+    }
     // Don't add duplicates (optional)
     if (root->value == value){
         return root;   
@@ -108,8 +100,9 @@ Node * insert(Node * root, int value){
 
 // Print root last post order traversal
 void postOrder(Node * root){
-    if (root == NULL)
+    if (root == NULL){
         return; // move up a level
+    }
     // going down a level    
     postOrder(root->l);
     // coming up a level    
@@ -123,13 +116,6 @@ void postOrder(Node * root){
     // beginning the process of moving up
 }
 
-Node * createNode(int value){
-    Node * ret = calloc(1, sizeof(Node));
-    ret->value = value;
-    ret->r = ret->l = NULL;    
-    return ret;
-}
-
 int  contains(Node * root, int value){
     if (root == NULL){
         return 0;    
@@ -137,14 +123,44 @@ int  contains(Node * root, int value){
     if (root->value == value){
         return 1;
     }
-    // root is smaller (5) than target (8)
+    // root is smaller than target
     if (root->value < value){
         // go right (has larger values)
             return contains(root->r, value);
     }
     else{
-        // root (5) is greater than target (2)
+        // root is greater than target
         // go left (has smaller values)
         return contains(root->l, value);     
     }
+}
+
+int main(){
+	int numPlayers, skill;
+	int * skillArr;
+	Node * root = NULL;
+	printf("How many palyers?\n");
+	scanf("%i", &numPlayers);
+	printf("%i\n", numPlayers);
+
+	skillArr = (int*)calloc(numPlayers, sizeof(int));
+	printf("Enter The table activation order\n");
+	for(int i = numPlayers - 2 ; i >= 0; i--){
+		scanf("%i", &skill);
+		skillArr[i] = skill;
+	}
+
+	printf("Post Order:\n");
+	for(int i = 0; i < numPlayers - 1; i++){
+		root = insert(root, skillArr[i]);
+		printf("%i ", skillArr[i]);
+	}
+	postOrder(root);
+
+	printf("\n");
+	printf("\n");
+	printf("%i", contains(root, 3));
+	printf("\n");
+	printf("\n");
+	return 0;
 }
