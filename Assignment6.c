@@ -5,95 +5,33 @@
 typedef struct Node Node;
 
 struct Node{
-    int value;    
+    int identifier;
+    int victor;    
     Node *l, * r;
 };
 
-Node * createNode(int value){
+Node * createNode(int identifier){
     Node * ret = calloc(1, sizeof(Node));
-    ret->value = value;
-    ret->r = ret->l = NULL;
-    printf("createNode success.\n");    
+    ret->identifier = identifier;
+    ret->r = ret->l = NULL; 
     return ret;
 }
 
-int sumOfLeaves(Node * root){
-    if (root == NULL) return 0;
-    if (root->r == NULL && root->l == NULL){
-            return root->value;    
-    }    
-    int ans = 0;    
-    ans += sumOfLeaves(root->r);    
-    ans += sumOfLeaves(root->l);    
-    return ans;
-}
-
-// Method to find the smallest node in the tree
-Node * findSmallest(Node * root){    
-	// if there is a smaller node (left child)    
-	// then find the smallest in that left subtree    
-	if (root->l != NULL)
-	    return findSmallest(root->l);
-	    // No smaller node (no left child)
-    return root; // base case after recursive call woah
-}
-
-// remove2 a value from a tree and return the resulting root
-Node * remove2(Node * root, int value){
-    if (root == NULL){
-    	return root;
-    }        
-    if (root->value == value){
-        // 0 children        
-        if (root->r == NULL && root->l == NULL){
-            free(root);
-            // empty tree
-            return NULL;
-        }
-        // 1 child
-        if (root->r == NULL || root->l == NULL){
-            Node * child = root->r;
-                if (child == NULL) child = root->l;
-                free(root);
-                return child;
-        }
-        // 2 children :(
-        // Find the min in the larger sub (replacement)
-        Node * smallest = findSmallest(root->r);
-        printf("Smallest is %d\n", smallest->value);
-        // swap values
-        int tmp = root->value;
-        root->value = smallest->value;
-        smallest->value = tmp;
-        // Remove the value from that right subtree
-        root->r = remove2(root->r, value);
-        // Root is still the same (ideally)
-        return root;    
-    }    
-    if (root->value < value){
-        root->r = remove2(root->r, value);
-    }    
-    if (root->value > value){
-        root->l = remove2(root->l, value);   
-    }    
-    return root;
-}
-
 // Return the root of the tree
-Node * insert(Node * root, int value){
+Node * insert(Node * root, int identifier){
     if (root == NULL){
-        return createNode(value);
+        return createNode(identifier);
     }
     // Don't add duplicates (optional)
-    if (root->value == value){
+    if (root->identifier == identifier){
         return root;   
     }    
     // root is smaller than our target    
-    if (root->value < value){
-        root->r = insert(root->r, value);
+    if (root->identifier < identifier){
+        root->r = insert(root->r, identifier);
     }
     else{
-        root->l = insert(root->l, value);
+        root->l = insert(root->l, identifier);
     }    
     return root;
 }
@@ -111,56 +49,67 @@ void postOrder(Node * root){
     postOrder(root->r);    
     // come up a level    
 
-    printf("%d ", root->value);    
+    printf("%d ", root->identifier);    
 
     // beginning the process of moving up
 }
 
-int  contains(Node * root, int value){
+int isGreater(int a, int b){
+    int ret;
+    if (a >= b){
+        ret = a;
+    }
+    else ret = b;
+    return ret;
+}
+
+int simulate(Node * root, int * skillArr, int * position){
+    int ret;
     if (root == NULL){
-        return 0;    
+        ret = skillArr[*position];
+
+        position++;
+        printf("Position is %i \n", *position);
+        return ret;
     }
-    if (root->value == value){
-        return 1;
-    }
-    // root is smaller than target
-    if (root->value < value){
-        // go right (has larger values)
-            return contains(root->r, value);
-    }
-    else{
-        // root is greater than target
-        // go left (has smaller values)
-        return contains(root->l, value);     
-    }
+    root->victor = isGreater(simulate(root->l, skillArr, position),simulate(root->r, skillArr, position));
+    printf("node %i's victor is %i\n", root->identifier, root->victor);
+    return root->victor;
 }
 
 int main(){
-	int numPlayers, skill;
-	int * skillArr;
-	Node * root = NULL;
-	printf("How many palyers?\n");
-	scanf("%i", &numPlayers);
-	printf("%i\n", numPlayers);
 
-	skillArr = (int*)calloc(numPlayers, sizeof(int));
-	printf("Enter The table activation order\n");
-	for(int i = numPlayers - 2 ; i >= 0; i--){
-		scanf("%i", &skill);
-		skillArr[i] = skill;
-	}
+    int numPlayers, skill, tableVal;
+    int *tableArr, *skillArr, * position;
+    Node * root = NULL;
+   
+    printf("How many palyers?\n");
+    scanf("%i", &numPlayers);
+    
+    tableArr = (int*)calloc(numPlayers - 1, sizeof(int));
+    skillArr = (int*)calloc(numPlayers, sizeof(int));
 
-	printf("Post Order:\n");
-	for(int i = 0; i < numPlayers - 1; i++){
-		root = insert(root, skillArr[i]);
-		printf("%i ", skillArr[i]);
-	}
-	postOrder(root);
+    //get table activation order
+    printf("Enter The table activation order\n");
+    for(int i = numPlayers - 2 ; i >= 0; i--){
+        scanf("%i", &tableVal);
+        tableArr[i] = tableVal;
+    }
+    //insert table identifiers into bst
+    for(int i = 0; i < numPlayers - 1; i++){
+        root = insert(root, tableArr[i]);
+    }
+    //get player skill
+    printf("Enter player skill:\n");
+    for(int i = 0; i < numPlayers; i++){
+        scanf("%i", &skill);
+        skillArr[i] = skill;
+    }
+    //run tournament
+    simulate(root, skillArr, position);
 
-	printf("\n");
-	printf("\n");
-	printf("%i", contains(root, 3));
-	printf("\n");
-	printf("\n");
-	return 0;
+    printf("\nPost Order:\n");
+    postOrder(root);
+    printf("\n");
+    return 0;
 }
