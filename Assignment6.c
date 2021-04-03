@@ -43,7 +43,6 @@ void postOrder(Node * root){
     if (root == NULL){
         return;
     }
-
     postOrder(root->l);
     postOrder(root->r);    
     printf("%d ", root->identifier);    
@@ -84,17 +83,29 @@ int simulate(Node * root, int * skillArr){
     return root->victor; 
 }
 
-int getExcitement(Node * root){
+int getExcitement(Node * root, int excitement){
+    //if NULL, theres no excitement
     if (root == NULL){
         return 0;
     }
+    //excitement is the sum of curr root's excitement, and excitement of children
+    excitement = root->excitement + getExcitement(root->l, root->excitement) + getExcitement(root->r, root->excitement);
 
+    return excitement;
+}
 
+void destroyTree(Node * root){
+    if (root == NULL){
+        return;
+    }
+    destroyTree(root->l);
+    destroyTree(root->r);
+    free(root);
 }
 
 int main(){
+    /*
     Node * root = NULL;
-    int victor;
     //int counter;
     int skillArr[6] = {3, 19, 10, 20, 13, 6};
     int tableArr[5] = {1, 2, 5, 3, 4};
@@ -107,14 +118,18 @@ int main(){
         printf("%i ", skillArr[i]);
     }
     printf("\n");
-    victor = simulate(root, skillArr);
-    printf("The Tournament winner is Skill of  %i.\n", victor);
-    printf("Post Order: ");
+    printf("\n");
+    //victor = simulate(root, skillArr);
+    printf("The Tournament winner is Skill of  %i.\n", simulate(root, skillArr));
+    printf("The Excitement level of the tournament is %i.\n", getExcitement(root, 0));
+    printf("Excitement at each node: ");
     postOrder(root);
     printf("\n");
 
+    destroy(root);
     return 0;
-    /*int numPlayers, skill, tableVal, victor;
+    */
+    int numPlayers;
     int *tableArr, *skillArr;
     Node * root = NULL;
    
@@ -127,8 +142,7 @@ int main(){
     //get table activation order
     printf("Enter The table activation order\n");
     for(int i = numPlayers - 2 ; i >= 0; i--){
-        scanf("%i", &tableVal);
-        tableArr[i] = tableVal;
+        scanf("%i", &tableArr[i]);
     }
     //insert table identifiers into bst
     for(int i = 0; i < numPlayers - 1; i++){
@@ -137,14 +151,26 @@ int main(){
     //get player skill
     printf("Enter player skill:\n");
     for(int i = 0; i < numPlayers; i++){
-        scanf("%i", &skill);
-        skillArr[i] = skill;
+        scanf("%i", &skillArr[i]);
     }
+    
+    printf("\n");
+    printf("\n");
+
     //run tournament
-    victor = simulate(root, skillArr);
-    printf("The Tournament winner is Skill of  %i.\n", victor);
-    printf("\nPost Order:\n");
+    printf("The Tournament winner is Skill of  %i.\n", simulate(root, skillArr));
+
+    //get excitment of tournament
+    printf("The Excitement level of the tournament is %i.\n", getExcitement(root, 0));
+
+    printf("postOrder: ");
     postOrder(root);
     printf("\n");
-    return 0;*/
+
+    //free all memory
+    destroyTree(root);
+    free(tableArr);
+    free(skillArr);
+    return 0;
+     
 }
