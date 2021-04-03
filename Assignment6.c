@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+int counter = 0;
+
 typedef struct Node Node;
 
 struct Node{
@@ -36,22 +38,14 @@ Node * insert(Node * root, int identifier){
     return root;
 }
 
-// Print root last post order traversal
 void postOrder(Node * root){
     if (root == NULL){
-        return; // move up a level
+        return;
     }
-    // going down a level    
+
     postOrder(root->l);
-    // coming up a level    
-
-    // go down a level    
     postOrder(root->r);    
-    // come up a level    
-
     printf("%d ", root->identifier);    
-
-    // beginning the process of moving up
 }
 
 int isGreater(int a, int b){
@@ -63,24 +57,34 @@ int isGreater(int a, int b){
     return ret;
 }
 
-int simulate(Node * root, int * skillArr, int * position){
-    int ret;
-    if (root == NULL){
-        ret = skillArr[*position];
-
-        position++;
-        printf("Position is %i \n", *position);
-        return ret;
+int simulate(Node * root, int * skillArr, int counter){
+    if(root == NULL){
+        return skillArr[counter++];
     }
-    root->victor = isGreater(simulate(root->l, skillArr, position),simulate(root->r, skillArr, position));
-    printf("node %i's victor is %i\n", root->identifier, root->victor);
-    return root->victor;
+    root->victor = isGreater(simulate(root->r, skillArr, counter),simulate(root->l, skillArr, counter));
+    printf("Table %i's victor is %i. \n", root->identifier, root->victor);
+    return root->victor; 
 }
 
 int main(){
+    Node * root = NULL;
+    int victor;
+    //int counter;
+    int skillArr[6] = {3, 19, 10, 20, 13, 6};
+    int tableArr[5] = {4, 3, 5, 2, 1};
 
-    int numPlayers, skill, tableVal;
-    int *tableArr, *skillArr, * position;
+    for(int i = 0; i < 5; i++){
+        root = insert(root, tableArr[i]);
+    }
+
+    victor = simulate(root, skillArr, counter);
+    printf("The Tournament winner is Skill number %i.\n", victor);
+    postOrder(root);
+    printf("\n");
+
+    return 0;
+    /*int numPlayers, skill, tableVal;
+    int *tableArr, *skillArr, position;
     Node * root = NULL;
    
     printf("How many palyers?\n");
@@ -111,5 +115,5 @@ int main(){
     printf("\nPost Order:\n");
     postOrder(root);
     printf("\n");
-    return 0;
+    return 0;*/
 }
