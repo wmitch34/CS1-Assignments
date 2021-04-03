@@ -7,7 +7,8 @@ typedef struct Node Node;
 
 struct Node{
     int identifier;
-    int victor;    
+    int victor;
+    int excitement;    
     Node *l, * r;
 };
 
@@ -31,6 +32,7 @@ Node * insert(Node * root, int identifier){
     if (root->identifier < identifier){
         root->r = insert(root->r, identifier);
     }
+    //root is larger than target
     else{
         root->l = insert(root->l, identifier);
     }    
@@ -56,19 +58,38 @@ int isGreater(int a, int b){
     return ret;
 }
 
+//assign stucts a victor and excitement level
 int simulate(Node * root, int * skillArr){
+    //if root is null, pull skill from array and return it
     if(root == NULL){
         int tmp = skillArr[counter];
         counter++;
         return tmp;
     }
+    //recursive calls return skill levels of children's winner
     int a = simulate(root->l, skillArr);
     int b = simulate(root->r, skillArr);
+
+    //calculate winner
+    root->victor = isGreater(b, a);
+
+    //calculate excitement
+    root->excitement = abs(a - b);
+    
+    //test output
     printf("Table %i's competitors are %i and %i.\n", root->identifier, a, b);
-    int c = isGreater(a,b);
-    root->victor = c;
     printf("Table %i's victor is %i. \n", root->identifier, root->victor);
+    printf("Table %i's excitement level is %i.\n\n", root->identifier, root->excitement);
+    //return skill of victor
     return root->victor; 
+}
+
+int getExcitement(Node * root){
+    if (root == NULL){
+        return 0;
+    }
+
+
 }
 
 int main(){
@@ -93,8 +114,8 @@ int main(){
     printf("\n");
 
     return 0;
-    /*int numPlayers, skill, tableVal;
-    int *tableArr, *skillArr, position;
+    /*int numPlayers, skill, tableVal, victor;
+    int *tableArr, *skillArr;
     Node * root = NULL;
    
     printf("How many palyers?\n");
@@ -120,8 +141,8 @@ int main(){
         skillArr[i] = skill;
     }
     //run tournament
-    simulate(root, skillArr, position);
-
+    victor = simulate(root, skillArr);
+    printf("The Tournament winner is Skill of  %i.\n", victor);
     printf("\nPost Order:\n");
     postOrder(root);
     printf("\n");
