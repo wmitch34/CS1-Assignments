@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 int counter = 0;
 
@@ -57,11 +56,17 @@ int isGreater(int a, int b){
     return ret;
 }
 
-int simulate(Node * root, int * skillArr, int counter){
+int simulate(Node * root, int * skillArr){
     if(root == NULL){
-        return skillArr[counter++];
+        int tmp = skillArr[counter];
+        counter++;
+        return tmp;
     }
-    root->victor = isGreater(simulate(root->r, skillArr, counter),simulate(root->l, skillArr, counter));
+    int a = simulate(root->l, skillArr);
+    int b = simulate(root->r, skillArr);
+    printf("Table %i's competitors are %i and %i.\n", root->identifier, a, b);
+    int c = isGreater(a,b);
+    root->victor = c;
     printf("Table %i's victor is %i. \n", root->identifier, root->victor);
     return root->victor; 
 }
@@ -71,14 +76,19 @@ int main(){
     int victor;
     //int counter;
     int skillArr[6] = {3, 19, 10, 20, 13, 6};
-    int tableArr[5] = {4, 3, 5, 2, 1};
+    int tableArr[5] = {1, 2, 5, 3, 4};
 
     for(int i = 0; i < 5; i++){
         root = insert(root, tableArr[i]);
     }
-
-    victor = simulate(root, skillArr, counter);
-    printf("The Tournament winner is Skill number %i.\n", victor);
+    printf("competitor skill levels: ");
+    for(int i = 0; i < 6; i++){
+        printf("%i ", skillArr[i]);
+    }
+    printf("\n");
+    victor = simulate(root, skillArr);
+    printf("The Tournament winner is Skill of  %i.\n", victor);
+    printf("Post Order: ");
     postOrder(root);
     printf("\n");
 
